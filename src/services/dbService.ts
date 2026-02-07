@@ -37,7 +37,7 @@ export const dbService = {
         try {
             // @ts-ignore
             const result = await getConvex().query(api.users.login, { email, password });
-            return result;
+            return result as any;
         } catch (error) {
             console.error('Login error:', error);
             // Fallback for demo/dev if convex is not running or other error
