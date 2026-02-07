@@ -3,6 +3,7 @@ import { dbService } from '../services/dbService';
 
 interface RegisterProps {
     onSuccess: () => void;
+    initialMembershipType?: string;
 }
 
 declare global {
@@ -11,7 +12,7 @@ declare global {
     }
 }
 
-const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
+const Register: React.FC<RegisterProps> = ({ onSuccess, initialMembershipType }) => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -27,6 +28,12 @@ const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+
+    useEffect(() => {
+        if (initialMembershipType) {
+            setFormData(prev => ({ ...prev, membershipType: initialMembershipType }));
+        }
+    }, [initialMembershipType]);
 
     useEffect(() => {
         // Daum 우편번호 서비스 스크립트 로드
@@ -78,8 +85,8 @@ const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
         }
 
         setLoading(true);
-        const { confirmPassword, ...registerData } = formData;
-        const result = await dbService.register(registerData);
+        const { confirmPassword, membershipType, ...registerData } = formData;
+        const result = await dbService.register({ ...registerData, membership: membershipType });
         setLoading(false);
 
         if (result.success) {
@@ -97,11 +104,11 @@ const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
     ];
 
     return (
-        <div className="max-w-2xl mx-auto mt-8 p-10 bg-white rounded-[2.5rem] shadow-xl border border-gray-100 animate-in fade-in slide-in-from-bottom-4">
-            <div className="text-center mb-10">
+        <div className="max-w-2xl mx-auto mt-0 md:mt-8 p-6 md:p-10 bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-xl border border-gray-100 animate-in fade-in slide-in-from-bottom-4">
+            <div className="text-center mb-8 md:mb-10">
                 <span className="inline-block px-4 py-1.5 bg-orange-100 text-orange-600 text-xs font-black rounded-full mb-4">MEMBERSHIP APPLICATION</span>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">멤버십 신청 안내</h2>
-                <p className="text-slate-500">cafe120 비즈니스+ 멤버십의 가족이 되어보세요.</p>
+                <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">멤버십 신청 안내</h2>
+                <p className="text-slate-500 text-sm md:text-base break-keep">cafe120 비즈니스+ 멤버십의 가족이 되어보세요.</p>
             </div>
 
             {message && (
@@ -110,29 +117,29 @@ const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                 {/* Membership Selection */}
                 <div className="col-span-1 md:col-span-2">
                     <label className="block text-sm font-bold text-slate-700 mb-4 ml-1">신청하실 멤버십 종류</label>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-3 gap-2 md:gap-3">
                         {membershipPlans.map((plan) => (
                             <div
                                 key={plan.id}
                                 onClick={() => setFormData({ ...formData, membershipType: plan.id })}
-                                className={`cursor-pointer p-4 rounded-2xl border-2 transition-all text-center ${formData.membershipType === plan.id
+                                className={`cursor-pointer p-3 md:p-4 rounded-2xl border-2 transition-all text-center ${formData.membershipType === plan.id
                                     ? 'border-orange-500 ring-2 ring-orange-100'
                                     : 'border-gray-50 hover:border-orange-200'
                                     }`}
                             >
-                                <div className={`text-[10px] font-black uppercase mb-1 px-2 py-0.5 rounded-full inline-block ${plan.color}`}>
+                                <div className={`text-[9px] md:text-[10px] font-black uppercase mb-1 px-1 md:px-2 py-0.5 rounded-full inline-block ${plan.color}`}>
                                     {plan.name}
                                 </div>
-                                <div className="text-sm font-black text-slate-900 mt-1">{plan.price}</div>
+                                <div className="text-xs md:text-sm font-black text-slate-900 mt-1">{plan.price}</div>
                             </div>
                         ))}
                     </div>
-                    <p className="mt-4 text-xs text-orange-600 font-bold bg-orange-50 p-3 rounded-xl flex items-center gap-2">
-                        <span>💡</span> 멤버십 결제는 최종 승인 후, 별도 계약을 통해 진행됩니다.
+                    <p className="mt-4 text-[11px] md:text-xs text-orange-600 font-bold bg-orange-50 p-3 rounded-xl flex items-start md:items-center gap-2 break-keep">
+                        <span>💡</span> <span>멤버십 결제는 최종 승인 후, 별도 계약을 통해 진행됩니다.</span>
                     </p>
                 </div>
 
@@ -174,8 +181,8 @@ const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
                             type={showPassword ? "text" : "password"}
                             required
                             className={`w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 outline-none transition-all ${formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword
-                                    ? 'ring-2 ring-red-500'
-                                    : 'focus:ring-orange-500'
+                                ? 'ring-2 ring-red-500'
+                                : 'focus:ring-orange-500'
                                 }`}
                             placeholder="••••••••"
                             value={formData.confirmPassword}
@@ -242,20 +249,20 @@ const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
 
                 <div className="col-span-1 md:col-span-2">
                     <label className="block text-sm font-bold text-slate-700 mb-2 ml-1">사업장 주소</label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                         <input
                             type="text"
                             readOnly
                             required
                             onClick={handleAddressSearch}
-                            className="flex-1 px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none transition-all cursor-pointer"
+                            className="flex-1 px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none transition-all cursor-pointer text-sm md:text-base"
                             placeholder="주소 검색을 클릭하세요"
                             value={formData.address}
                         />
                         <button
                             type="button"
                             onClick={handleAddressSearch}
-                            className="px-6 bg-orange-100 text-orange-600 font-bold rounded-2xl hover:bg-orange-200 transition"
+                            className="px-6 py-4 sm:py-0 bg-orange-100 text-orange-600 font-bold rounded-2xl hover:bg-orange-200 transition whitespace-nowrap"
                         >
                             주소 검색
                         </button>
@@ -265,7 +272,7 @@ const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
                         name="user_addr_detail_field"
                         autoComplete="new-password"
                         rows={1}
-                        className="w-full mt-3 px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none transition-all resize-none overflow-hidden"
+                        className="w-full mt-3 px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-orange-500 outline-none transition-all resize-none overflow-hidden text-sm md:text-base"
                         placeholder="상세 주소를 입력하세요"
                         value={formData.detailAddress}
                         onChange={e => setFormData({ ...formData, detailAddress: e.target.value })}
@@ -280,7 +287,7 @@ const Register: React.FC<RegisterProps> = ({ onSuccess }) => {
                     >
                         {loading ? '신청 처리 중...' : '멤버십 신청 완료'}
                     </button>
-                    <p className="text-center text-xs text-slate-400 mt-6">
+                    <p className="text-center text-[11px] md:text-xs text-slate-400 mt-6 break-keep px-4">
                         신청 시 [이용약관] 및 [개인정보 처리방침]에 동의하는 것으로 간주됩니다.
                     </p>
                 </div>

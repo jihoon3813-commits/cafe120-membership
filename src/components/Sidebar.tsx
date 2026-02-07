@@ -14,11 +14,14 @@ const Sidebar: React.FC<SidebarProps> = ({ activeMenu, onSelectMenu, isOpen, onC
     const menuItems = [
         { cat: MenuCategory.HOME, icon: '🏠', show: true },
         { cat: MenuCategory.SALES, icon: '📈', show: !!user },
-        { cat: MenuCategory.EQUIPMENT, icon: '🛠️', show: !!user },
-        { cat: MenuCategory.RISK, icon: '⚖️', show: !!user },
         { cat: MenuCategory.APPS, icon: '🚀', special: true, show: !!user },
-        { cat: MenuCategory.MYPAGE, icon: '👤', show: !!user },
+        { cat: MenuCategory.INGREDIENT_ORDER, icon: '🛒', show: !!user },
+        { cat: MenuCategory.RESOURCES, icon: '📂', show: !!user },
+
         { cat: MenuCategory.PRICING, icon: '🎫', show: true },
+        { cat: MenuCategory.STORE_MGMT, icon: '🏢', show: user?.role === 'admin' },
+        { cat: MenuCategory.ORDER_MANAGE, icon: '🚚', show: user?.role === 'admin' },
+        { cat: MenuCategory.PRODUCT_MGMT, icon: '📦', show: user?.role === 'admin' },
         { cat: MenuCategory.ADMIN, icon: '⚙️', show: user?.role === 'admin' },
         { cat: MenuCategory.REGISTER, icon: '📝', show: !user },
         { cat: MenuCategory.LOGIN, icon: '🔑', show: !user },
@@ -60,10 +63,23 @@ const Sidebar: React.FC<SidebarProps> = ({ activeMenu, onSelectMenu, isOpen, onC
                 {user ? (
                     <div className="space-y-3">
                         <div className="bg-slate-900 rounded-2xl p-4 text-white">
-                            <p className="text-xs opacity-70 mb-1">{user.name} 회원님</p>
+                            <p className="text-xs opacity-70 mb-1">{user.name} {user.role === 'admin' ? '관리자님' : '회원님'}</p>
                             <p className="font-bold flex items-center">
-                                {user.membership === 'plus' ? 'Membership Plus' : user.membership === 'basic' ? 'Basic Membership' : '비회원'}
-                                {user.membership !== 'none' && <span className="ml-2 text-xs bg-orange-500 px-1.5 rounded text-white">ON</span>}
+                                {user.role === 'admin' ? (
+                                    <>
+                                        시스템 마스터
+                                        <span className="ml-2 text-xs bg-orange-500 px-1.5 rounded text-white italic">MASTER</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        {user.membership === 'egg120' ? '에그120 멤버십' :
+                                            user.membership === 'pie120' ? '파이120 멤버십' :
+                                                user.membership === 'cafe120' ? '카페120 멤버십' :
+                                                    user.membership === 'plus' ? 'Membership Plus' :
+                                                        user.membership === 'basic' ? 'Basic Membership' : '비회원'}
+                                        {user.membership !== 'none' && <span className="ml-2 text-xs bg-orange-500 px-1.5 rounded text-white leading-none h-4 flex items-center">ON</span>}
+                                    </>
+                                )}
                             </p>
                         </div>
                         <button
