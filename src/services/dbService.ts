@@ -5,8 +5,9 @@ import { api } from '../../convex/_generated/api';
 let convexClient: ConvexClient | null = null;
 const getConvex = () => {
     if (!convexClient) {
-        const convexUrl = import.meta.env.VITE_CONVEX_URL || "https://placeholder-url.convex.cloud";
         // @ts-ignore
+        const url = import.meta.env?.VITE_CONVEX_URL;
+        const convexUrl = url || "https://placeholder-url.convex.cloud";
         convexClient = new ConvexClient(convexUrl);
     }
     return convexClient;
