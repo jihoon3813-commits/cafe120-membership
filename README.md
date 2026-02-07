@@ -1,4 +1,4 @@
-# React + Vite
+# Cafe120 Membership Plus (Vercel Build Trigger: 2026-02-07 17:48)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
