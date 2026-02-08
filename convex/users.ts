@@ -5,8 +5,21 @@ import { v } from "convex/values";
 export const login = query({
     args: { email: v.string(), password: v.string() },
     handler: async (ctx, args) => {
-        // Master Admin Override (replicating logic from dbService.ts)
-        if (args.email === 'admin@cafe120.com' && args.password === 'admin123') {
+        // Fetch custom admin credentials from configs
+        const adminEmailConfig = await ctx.db
+            .query("configs")
+            .withIndex("by_key", (q) => q.eq("key", "admin_email"))
+            .first();
+        const adminPasswordConfig = await ctx.db
+            .query("configs")
+            .withIndex("by_key", (q) => q.eq("key", "admin_password"))
+            .first();
+
+        const defaultAdminEmail = adminEmailConfig?.value || 'admin@cafe120.com';
+        const defaultAdminPassword = adminPasswordConfig?.value || 'admin123';
+
+        // Master Admin Override
+        if (args.email === defaultAdminEmail && args.password === defaultAdminPassword) {
             return {
                 success: true,
                 user: {
@@ -35,6 +48,39 @@ export const login = query({
         // Return user object (excluding password)
         const { password, ...safeUser } = user;
         return { success: true, user: safeUser };
+    },
+});
+
+// Update Admin Credentials: admin only
+export const updateAdmin = mutation({
+    args: {
+        email: v.string(),
+        password: v.string(),
+    },
+    handler: async (ctx, args) => {
+        // We use saveConfig logic here or just direct db calls
+        const emailEntry = await ctx.db
+            .query("configs")
+            .withIndex("by_key", (q) => q.eq("key", "admin_email"))
+            .first();
+        const passwordEntry = await ctx.db
+            .query("configs")
+            .withIndex("by_key", (q) => q.eq("key", "admin_password"))
+            .first();
+
+        if (emailEntry) {
+            await ctx.db.patch(emailEntry._id, { value: args.email });
+        } else {
+            await ctx.db.insert("configs", { key: "admin_email", value: args.email });
+        }
+
+        if (passwordEntry) {
+            await ctx.db.patch(passwordEntry._id, { value: args.password });
+        } else {
+            await ctx.db.insert("configs", { key: "admin_password", value: args.password });
+        }
+
+        return { success: true };
     },
 });
 
@@ -116,3 +162,4 @@ export const deleteUser = mutation({
         return { success: true };
     },
 });
+

@@ -40,22 +40,15 @@ export const dbService = {
             return result as any;
         } catch (error) {
             console.error('Login error:', error);
-            // Fallback for demo/dev if convex is not running or other error
-            if (email === 'admin@cafe120.com' && password === 'admin123') {
-                return {
-                    success: true,
-                    user: {
-                        email: 'admin@cafe120.com',
-                        name: '총괄관리자',
-                        role: 'admin' as const,
-                        membership: 'plus' as const,
-                        status: 'active' as const
-                    }
-                };
-            }
             return { success: false, message: '서버 연결 오류가 발생했습니다.' };
         }
     },
+
+    async updateAdmin(email: string, password: string) {
+        // @ts-ignore
+        return await getConvex().mutation(api.users.updateAdmin, { email, password });
+    },
+
 
     async register(data: any): Promise<{ success: boolean; message?: string }> {
         try {
