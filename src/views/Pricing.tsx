@@ -1,66 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { dbService } from '../services/dbService';
+import { Product } from '../types';
 
 interface PricingProps {
     onSelectMembership: (type: string) => void;
 }
 
 const Pricing: React.FC<PricingProps> = ({ onSelectMembership }) => {
-    const memberships = [
-        {
-            id: 'egg120',
-            name: 'egg120 Membership',
-            desc: '요즘 핫한 에그120을 부담없이 도입할 수 있는 멤버십 상품입니다.',
-            commitment: '2년 약정',
-            price: '99,000',
-            installments: 'X 23회(2~24회)',
-            initial: '최초 1회는 입회비 포함 100만원 결제',
-            image: 'https://github.com/jihoon3813-commits/img_120/blob/main/%5B%ED%81%AC%EA%B8%B0%EB%B3%80%ED%99%98%5D%5B%ED%81%AC%EA%B8%B0%EB%B3%80%ED%99%98%5D240503_120%EA%B2%B9%ED%8C%8C%EC%9D%B40929%20(1).jpg?raw=true',
-            features: [
-                '샵인샵 풀패키지 제공',
-                '머신 코팅 서비스 연 1회(총 2회)',
-                '비즈니스+ APPs 제공',
-                '리스크 케어 AI 서비스 제공'
-            ],
-            color: 'orange',
-            isPremium: false
-        },
-        {
-            id: 'pie120',
-            name: 'pie120 Membership',
-            desc: 'cafe120의 대표 브랜드인 120겹파이로 꾸준한 매출 상승 효과를 누려 보세요.',
-            commitment: '2년 약정',
-            price: '129,000',
-            installments: 'X 23회(2~24회)',
-            initial: '최초 1회는 입회비 포함 150만원 결제',
-            image: 'https://github.com/jihoon3813-commits/img_120/blob/main/%EC%97%B0%EC%B6%9C_120%EA%B2%B9_2.jpg?raw=true',
-            features: [
-                '샵인샵 풀패키지 제공',
-                '머신 코팅 서비스 연 1회(총 2회)',
-                '비즈니스+ APPs 제공',
-                '리스크 케어 AI 서비스 제공'
-            ],
-            color: 'orange',
-            isPremium: true
-        },
-        {
-            id: 'cafe120',
-            name: 'cafe120 Membership',
-            desc: 'pie&egg120 두톱 브랜드로 우리동네 인기 카페로 우뚝 설 수 있어요.',
-            commitment: '2년 약정',
-            price: '199,000',
-            installments: 'X 23회(2~24회)',
-            initial: '최초 1회는 입회비 포함 250만원 결제',
-            image: 'https://github.com/jihoon3813-commits/img_120/blob/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg?raw=true',
-            features: [
-                '샵인샵 풀패키지 제공(egg+pie)',
-                '머신 코팅 서비스 각각 연 1회(총 4회)',
-                '비즈니스+ APPs 제공',
-                '리스크 케어 AI 서비스 제공'
-            ],
-            color: 'slate',
-            isPremium: false
-        }
-    ];
+    const [memberships, setMemberships] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchMemberships = async () => {
+            const products = await dbService.getProducts();
+            setMemberships(products.filter(p => p.active));
+            setLoading(false);
+        };
+        fetchMemberships();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-slate-400 font-bold">멤버십 플랜 로딩 중...</p>
+            </div>
+        );
+    }
+
+    if (memberships.length === 0) {
+        return (
+            <div className="text-center py-20">
+                <p className="text-slate-400 font-bold text-xl italic">현재 신청 가능한 멤버십 플랜이 없습니다.</p>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-16 pb-20">
@@ -75,7 +49,7 @@ const Pricing: React.FC<PricingProps> = ({ onSelectMembership }) => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-7xl mx-auto px-4">
                 {memberships.map((item, idx) => (
                     <div
-                        key={idx}
+                        key={item.id}
                         className={`relative rounded-[3.5rem] border transition-all duration-500 hover:scale-[1.03] flex flex-col overflow-hidden ${item.isPremium
                             ? 'bg-white border-orange-500 shadow-2xl ring-4 ring-orange-500/10 z-10'
                             : item.color === 'slate'
@@ -102,7 +76,7 @@ const Pricing: React.FC<PricingProps> = ({ onSelectMembership }) => {
                         <div className="p-10 flex-1 flex flex-col">
                             <div className="mb-8">
                                 <h3 className={`text-2xl font-black ${item.color === 'slate' ? 'text-white' : 'text-slate-900'}`}>{item.name}</h3>
-                                <p className={`text-sm mt-3 leading-relaxed ${item.color === 'slate' ? 'text-slate-400' : 'text-slate-500'}`}>{item.desc}</p>
+                                <p className={`text-sm mt-3 leading-relaxed ${item.color === 'slate' ? 'text-slate-400' : 'text-slate-500'}`}>{item.description}</p>
                             </div>
 
                             <div className={`py-6 border-y ${item.color === 'slate' ? 'border-white/10' : 'border-gray-100'}`}>
@@ -118,7 +92,7 @@ const Pricing: React.FC<PricingProps> = ({ onSelectMembership }) => {
                             </div>
 
                             <ul className="space-y-4 my-8 flex-1">
-                                {item.features.map((feature, fIdx) => (
+                                {item.features?.map((feature, fIdx) => (
                                     <li key={fIdx} className="flex items-start gap-3">
                                         <span className={`mt-1 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${item.color === 'slate' ? 'bg-orange-500 text-white' : 'bg-orange-100 text-orange-600'}`}>
                                             ✓
@@ -133,10 +107,10 @@ const Pricing: React.FC<PricingProps> = ({ onSelectMembership }) => {
                             <button
                                 onClick={() => onSelectMembership(item.id)}
                                 className={`w-full py-5 rounded-2xl font-black transition-all transform active:scale-[0.98] ${item.isPremium
-                                        ? 'bg-orange-500 text-white shadow-xl shadow-orange-500/20 hover:bg-orange-600'
-                                        : item.color === 'slate'
-                                            ? 'bg-white text-slate-900 hover:bg-orange-50'
-                                            : 'bg-slate-900 text-white hover:bg-slate-800'
+                                    ? 'bg-orange-500 text-white shadow-xl shadow-orange-500/20 hover:bg-orange-600'
+                                    : item.color === 'slate'
+                                        ? 'bg-white text-slate-900 hover:bg-orange-50'
+                                        : 'bg-slate-900 text-white hover:bg-slate-800'
                                     }`}>
                                 멤버십 신청하기
                             </button>

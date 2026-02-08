@@ -5,7 +5,11 @@ import { v } from "convex/values";
 export const list = query({
     args: {},
     handler: async (ctx) => {
-        return await ctx.db.query("products").collect();
+        const products = await ctx.db.query("products").collect();
+        return Promise.all(products.map(async (product) => ({
+            ...product,
+            image: product.storageId ? (await ctx.storage.getUrl(product.storageId)) || product.image : product.image
+        })));
     },
 });
 
@@ -24,35 +28,41 @@ export const create = mutation({
         color: v.string(),
         isPremium: v.boolean(),
         active: v.boolean(),
+        storageId: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         await ctx.db.insert("products", args);
     },
 });
 
-// Update product
+// Update product using internal _id
 export const update = mutation({
     args: {
-        id: v.string(),
+        id: v.id("products"),
         fieldsToUpdate: v.object({
+            id: v.optional(v.string()), // Allow updating the custom ID string
             name: v.optional(v.string()),
             description: v.optional(v.string()),
             price: v.optional(v.string()),
             active: v.optional(v.boolean()),
             image: v.optional(v.string()),
             features: v.optional(v.array(v.string())),
+            storageId: v.optional(v.string()),
+            isPremium: v.optional(v.boolean()),
+            commitment: v.optional(v.string()),
+            installments: v.optional(v.string()),
+            initial: v.optional(v.string()),
+            color: v.optional(v.string()),
         }),
     },
     handler: async (ctx, args) => {
-        const existingProduct = await ctx.db
-            .query("products")
-            .withIndex("by_product_id", (q) => q.eq("id", args.id))
-            .first();
+        await ctx.db.patch(args.id, args.fieldsToUpdate);
+    },
+});
 
-        if (!existingProduct) {
-            throw new Error("Product not found");
-        }
-
-        await ctx.db.patch(existingProduct._id, args.fieldsToUpdate);
+export const remove = mutation({
+    args: { id: v.id("products") },
+    handler: async (ctx, args) => {
+        await ctx.db.delete(args.id);
     },
 });

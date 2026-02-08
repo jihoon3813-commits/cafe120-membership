@@ -29,6 +29,7 @@ export default defineSchema({
         color: v.string(),
         isPremium: v.boolean(),
         active: v.boolean(),
+        storageId: v.optional(v.string()),
     }).index("by_product_id", ["id"]),
     leads: defineTable({
         productId: v.string(), // product id

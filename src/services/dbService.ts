@@ -107,30 +107,56 @@ export const dbService = {
 
     async saveProduct(product: any): Promise<void> {
         try {
-            // Check if product exists
-            // @ts-ignore
-            const products = await getConvex().query(api.products.list);
-            const exists = products.some((p: any) => p.id === product.id);
+            const dataToSave: any = {
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                active: product.active,
+                image: product.image || '',
+                features: product.features || [],
+                storageId: product.storageId,
+                isPremium: product.isPremium ?? false,
+                commitment: product.commitment,
+                installments: product.installments,
+                initial: product.initial,
+                color: product.color || 'orange'
+            };
 
-            if (exists) {
+            // Remove undefined optional fields
+            Object.keys(dataToSave).forEach(key => {
+                if (dataToSave[key] === undefined) {
+                    delete dataToSave[key];
+                }
+            });
+
+            if (product._id) {
+                // UPDATE
                 // @ts-ignore
-                await getConvex().mutation(api.products.update, {
-                    id: product.id,
-                    fieldsToUpdate: {
-                        name: product.name,
-                        description: product.description,
-                        price: product.price,
-                        active: product.active,
-                        image: product.image,
-                        features: product.features
-                    }
+                await getConvex().mutation("products:update", {
+                    id: product._id,
+                    fieldsToUpdate: dataToSave
                 });
             } else {
+                // CREATE
                 // @ts-ignore
-                await getConvex().mutation(api.products.create, product);
+                await getConvex().mutation("products:create", dataToSave);
             }
         } catch (e) {
-            console.error(e);
+            console.error('Save Product Error:', e);
+            throw e;
+        }
+    },
+
+    async deleteProduct(id: any): Promise<void> {
+        try {
+            if (!id) throw new Error("Missing product ID");
+            const targetId = typeof id === 'object' ? id.toString() : id;
+            // @ts-ignore
+            await getConvex().mutation("products:remove", { id: targetId });
+        } catch (e) {
+            console.error('Delete Product Error:', e);
+            throw e;
         }
     },
 

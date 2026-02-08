@@ -26,6 +26,16 @@ const App: React.FC = () => {
     const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
     React.useEffect(() => {
+        // Load user from localStorage
+        const savedUser = localStorage.getItem('cafe120_user');
+        if (savedUser) {
+            try {
+                setUser(JSON.parse(savedUser));
+            } catch (e) {
+                console.error('Failed to parse saved user', e);
+            }
+        }
+
         const params = new URLSearchParams(window.location.search);
         const p = params.get('p');
         if (p) {
@@ -36,11 +46,13 @@ const App: React.FC = () => {
 
     const handleLogin = (u: User) => {
         setUser(u);
+        localStorage.setItem('cafe120_user', JSON.stringify(u));
         setActiveMenu(MenuCategory.HOME);
     };
 
     const handleLogout = () => {
         setUser(null);
+        localStorage.removeItem('cafe120_user');
         setActiveMenu(MenuCategory.HOME);
     };
 

@@ -8,10 +8,43 @@ const ProductManagement: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
     const [activeTab, setActiveTab] = useState<'products' | 'leads'>('products');
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         loadData();
     }, []);
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const postUrl = await dbService.generateUploadUrl();
+            const result = await fetch(postUrl, {
+                method: "POST",
+                headers: { "Content-Type": file.type },
+                body: file,
+            });
+            const { storageId } = await result.json();
+
+            // Preview local file or get URL from storageId
+            // Actually, we can just use URL.createObjectURL for immediate preview
+            // but for full consistency, we should maybe get the storage URL.
+            // But since we want to save it, let's just set the storageId and a temp preview.
+            const url = URL.createObjectURL(file);
+            setEditingProduct({
+                ...editingProduct!,
+                image: url, // Temporary preview URL
+                storageId: storageId
+            });
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('이미지 업로드 중 오류가 발생했습니다.');
+        } finally {
+            setUploading(false);
+        }
+    };
 
     const loadData = async () => {
         const [p, l] = await Promise.all([
@@ -25,10 +58,24 @@ const ProductManagement: React.FC = () => {
     const handleSaveProduct = async (e: React.FormEvent) => {
         e.preventDefault();
         if (editingProduct) {
-            await dbService.saveProduct(editingProduct);
-            setIsEditing(false);
-            setEditingProduct(null);
-            loadData();
+            try {
+                const productToSave = {
+                    ...editingProduct,
+                    features: (editingProduct.features || []).filter(f => f.trim() !== '')
+                };
+                // If it's a temporary blob URL, don't save it as the permanent image string
+                if (productToSave.storageId && productToSave.image?.startsWith('blob:')) {
+                    productToSave.image = '';
+                }
+
+                await dbService.saveProduct(productToSave);
+                setIsEditing(false);
+                setEditingProduct(null);
+                loadData();
+            } catch (error) {
+                console.error(error);
+                alert('상품 저장 중 오류가 발생했습니다. 모든 필드가 올바르게 입력되었는지 확인해주세요.');
+            }
         }
     };
 
@@ -45,8 +92,8 @@ const ProductManagement: React.FC = () => {
         <div className="space-y-8 animate-in fade-in duration-500">
             <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-black text-slate-900">상품 관리</h2>
-                    <p className="text-slate-500 mt-1">상품 등록 및 광고용 랜딩페이지 관리</p>
+                    <h2 className="text-3xl font-black text-slate-900">상품 및 멤버십 관리</h2>
+                    <p className="text-slate-500 mt-1">상품/멤버십 등록 및 통합 관리</p>
                 </div>
                 <div className="flex bg-white p-1 rounded-xl shadow-sm border border-gray-100">
                     <button
@@ -92,7 +139,7 @@ const ProductManagement: React.FC = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {products.map((product) => (
-                            <div key={product.id} className="bg-white rounded-[2rem] border border-gray-100 p-8 shadow-sm hover:shadow-xl transition-all duration-300 group">
+                            <div key={product._id} className="bg-white rounded-[2rem] border border-gray-100 p-8 shadow-sm hover:shadow-xl transition-all duration-300 group">
                                 <div className="flex items-start justify-between mb-6">
                                     <div className="flex items-center gap-4">
                                         <div className="w-16 h-16 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
@@ -113,6 +160,25 @@ const ProductManagement: React.FC = () => {
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={async () => {
+                                                if (confirm('이 상품을 삭제하시겠습니까?')) {
+                                                    try {
+                                                        // @ts-ignore
+                                                        await dbService.deleteProduct(product._id);
+                                                        loadData();
+                                                    } catch (error) {
+                                                        console.error(error);
+                                                        alert('상품 삭제 중 오류가 발생했습니다.');
+                                                    }
+                                                }
+                                            }}
+                                            className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                             </svg>
                                         </button>
                                     </div>
@@ -205,7 +271,7 @@ const ProductManagement: React.FC = () => {
             {/* Edit Modal */}
             {isEditing && (
                 <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-                    <div className="bg-white rounded-[3rem] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in zoom-in duration-300">
+                    <div className="bg-white rounded-[3rem] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in zoom-in duration-300 no-scrollbar">
                         <div className="p-10">
                             <div className="flex justify-between items-center mb-10">
                                 <h3 className="text-2xl font-black text-slate-900">상품 정보 설정</h3>
@@ -243,6 +309,18 @@ const ProductManagement: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-2">
+                                    <label className="text-xs font-black text-slate-500 ml-1">카드 테마 색상</label>
+                                    <select
+                                        value={editingProduct?.color}
+                                        onChange={(e) => setEditingProduct({ ...editingProduct!, color: e.target.value })}
+                                        className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all font-bold"
+                                    >
+                                        <option value="orange">오렌지 (라이트)</option>
+                                        <option value="slate">슬레이트 (다크)</option>
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
                                     <label className="text-xs font-black text-slate-500 ml-1">설명</label>
                                     <textarea
                                         value={editingProduct?.description}
@@ -250,6 +328,16 @@ const ProductManagement: React.FC = () => {
                                         className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all font-bold h-24 resize-none"
                                         placeholder="상품에 대한 상세 설명을 입력하세요."
                                         required
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black text-slate-500 ml-1">주요 특장점 (한 줄에 하나씩)</label>
+                                    <textarea
+                                        value={(editingProduct?.features || [])?.join('\n')}
+                                        onChange={(e) => setEditingProduct({ ...editingProduct!, features: e.target.value.split('\n') })}
+                                        className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all font-bold h-32"
+                                        placeholder="예: 샵인샵 풀패키지 제공&#10;머신 코팅 서비스 연 1회&#10;비즈니스+ APPs 제공"
                                     />
                                 </div>
 
@@ -301,14 +389,61 @@ const ProductManagement: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-black text-slate-500 ml-1">이미지 URL</label>
-                                    <input
-                                        type="text"
-                                        value={editingProduct?.image}
-                                        onChange={(e) => setEditingProduct({ ...editingProduct!, image: e.target.value })}
-                                        className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all font-bold"
-                                        placeholder="https://..."
-                                    />
+                                    <label className="text-xs font-black text-slate-500 ml-1">상품 이미지</label>
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-24 h-24 bg-slate-50 border border-slate-100 rounded-3xl overflow-hidden flex-shrink-0 relative group/img">
+                                            {editingProduct?.image ? (
+                                                <img src={editingProduct.image} alt="Preview" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                            {uploading && (
+                                                <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center">
+                                                    <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 space-y-3">
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={handleImageUpload}
+                                                    className="hidden"
+                                                    id="product-image-upload"
+                                                />
+                                                <label
+                                                    htmlFor="product-image-upload"
+                                                    className="px-6 py-3 bg-slate-100 text-slate-600 rounded-xl font-black text-xs hover:bg-orange-50 hover:text-orange-600 cursor-pointer transition-all border border-transparent hover:border-orange-100"
+                                                >
+                                                    이미지 업로드
+                                                </label>
+                                                {editingProduct?.image && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setEditingProduct({ ...editingProduct!, image: '', storageId: undefined })}
+                                                        className="px-6 py-3 bg-slate-50 text-slate-400 rounded-xl font-black text-xs hover:bg-red-50 hover:text-red-500 transition-all"
+                                                    >
+                                                        삭제
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-slate-300 uppercase tracking-widest ml-1">직접 URL 입력 (선택)</label>
+                                                <input
+                                                    type="text"
+                                                    value={editingProduct?.image}
+                                                    onChange={(e) => setEditingProduct({ ...editingProduct!, image: e.target.value, storageId: undefined })}
+                                                    className="w-full px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all text-xs font-bold"
+                                                    placeholder="https://..."
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="flex items-center gap-6 p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
