@@ -20,6 +20,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+    const getReliableUrl = (url: string) => {
+        if (!url) return '';
+        // Convert github blob URLs to raw.githubusercontent.com
+        if (url.includes('github.com') && url.includes('/blob/')) {
+            return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/').split('?')[0];
+        }
+        return url;
+    };
+
     useEffect(() => {
         const fetchProduct = async () => {
             const products = await dbService.getProducts();
@@ -156,9 +165,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                         <div className="absolute -inset-4 bg-orange-500/10 rounded-[3rem] blur-2xl"></div>
                         <div className="relative rounded-[3rem] overflow-hidden shadow-3xl border-8 border-white">
                             <img 
-                                src={productId === 'egg120' ? "https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg" : product.image} 
+                                src={productId === 'egg120' ? "https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg" : getReliableUrl(product.image)} 
                                 alt={product.name} 
-                                className="w-full h-auto object-cover transform hover:scale-110 transition-transform duration-700" 
+                                className="w-full h-auto object-cover transform hover:scale-110 transition-transform duration-700 font-bold"
+                                onError={(e) => {
+                                    // Fallback if the database image is broken
+                                    const target = e.target as HTMLImageElement;
+                                    if (productId === 'egg120') {
+                                        target.src = "https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg";
+                                    }
+                                }}
                             />
                         </div>
                         {/* Summary Badges */}
