@@ -155,7 +155,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                     <div className="relative animate-in fade-in zoom-in duration-1000 delay-300">
                         <div className="absolute -inset-4 bg-orange-500/10 rounded-[3rem] blur-2xl"></div>
                         <div className="relative rounded-[3rem] overflow-hidden shadow-3xl border-8 border-white">
-                            <img src={product.image} alt={product.name} className="w-full h-auto object-cover transform hover:scale-110 transition-transform duration-700" />
+                            <img 
+                                src={productId === 'egg120' ? "https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg" : product.image} 
+                                alt={product.name} 
+                                className="w-full h-auto object-cover transform hover:scale-110 transition-transform duration-700" 
+                            />
                         </div>
                         {/* Summary Badges */}
                         <div className="absolute -top-8 -right-8 bg-white p-6 rounded-3xl shadow-2xl border border-orange-50 animate-bounce delay-700 hidden md:block">
