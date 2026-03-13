@@ -18,6 +18,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
         message: ''
     });
 
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
     useEffect(() => {
         const fetchProduct = async () => {
             const products = await dbService.getProducts();
@@ -68,11 +70,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
             {/* Header / Navigation */}
             <header className="fixed top-0 left-0 w-full z-[100] bg-white/80 backdrop-blur-xl border-b border-gray-100 transition-all duration-300">
                 <div className="max-w-7xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between">
-                    <div className="flex items-center gap-4 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                    <div className="flex items-center cursor-pointer h-full" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                         <img
-                            src="https://github.com/jihoon3813-commits/img_120/blob/main/egg120_logo_2.png?raw=true"
+                            src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/120%EA%B2%B9%ED%8C%8C%EC%9D%B4_%EC%9B%90%ED%98%95%EB%A1%9C%EA%B3%A0.png?raw=true"
                             alt="EGG 120"
-                            className="h-12 md:h-16 w-auto object-contain transition-transform hover:scale-105"
+                            className="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-105"
                         />
                     </div>
 
@@ -260,9 +262,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                         <div className="relative animate-in fade-in slide-in-from-right duration-1000 delay-300">
                             <div className="absolute -inset-10 bg-orange-50 rounded-full blur-[100px] opacity-70"></div>
                             <img
-                                src="https://github.com/jihoon3813-commits/img_120/blob/main/120egg%20(4)_20.png?raw=true"
+                                src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg?raw=true"
                                 alt="Real Egg Structure"
-                                className="relative w-full h-auto transform hover:scale-105 transition-transform duration-700"
+                                className="relative w-full h-auto rounded-[2rem] shadow-2xl transform scale-110 hover:scale-[1.15] transition-transform duration-700"
                             />
                             {/* Decorative Sparkles */}
                             <div className="absolute top-10 right-10 text-orange-400 text-4xl animate-pulse">✨</div>
@@ -337,17 +339,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                                 {[
-                                    { name: '팥', en: 'Red Bean Filling Egg Bread', desc: '붕어빵 보다 더 맛있어요' },
-                                    { name: '슈크림', en: 'Cream Puff Egg Bread', desc: '십원빵 보다 더 맛있어요' },
-                                    { name: '통모짜', en: 'Mozzarella Chunk Egg Bread', badges: ['추천'] },
-                                    { name: '로제미트', en: 'Rose Meat Egg Bread' }
+                                    { name: '팥', en: 'Red Bean Filling Egg Bread', desc: '붕어빵 보다 더 맛있어요', img: 'https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%88%84%EB%81%BC_%ED%8C%A5.png?raw=true' },
+                                    { name: '슈크림', en: 'Cream Puff Egg Bread', desc: '십원빵 보다 더 맛있어요', img: 'https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%88%84%EB%81%BC_%EC%8A%88%ED%81%AC%EB%A6%BC.png?raw=true' },
+                                    { name: '통모짜', en: 'Mozzarella Chunk Egg Bread', badges: ['추천'], img: 'https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%88%84%EB%81%BC_%ED%86%B5%EB%AA%A8%EC%A7%9C.png?raw=true' },
+                                    { name: '로제미트', en: 'Rose Meat Egg Bread', img: 'https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%88%84%EB%81%BC_%EB%A1%9C%EC%A0%9C%EB%AF%B8%ED%8A%B8.png?raw=true' }
                                 ].map((item, idx) => (
                                     <div key={idx} className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden group hover:shadow-2xl transition-all duration-500">
                                         <div className="aspect-square bg-slate-100 relative overflow-hidden">
-                                            {/* Placeholder for menu image */}
-                                            <div className="absolute inset-0 flex items-center justify-center text-slate-300 font-bold text-sm italic">
-                                                Image Content
-                                            </div>
+                                            <img
+                                                src={item.img}
+                                                alt={item.name}
+                                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                                            />
                                             {/* Top Left Badges */}
                                             <div className="absolute top-4 left-4 flex flex-wrap gap-1">
                                                 {item.badges?.map(b => (
@@ -460,109 +463,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                                 </p>
                             </div>
                             <div className="flex-1 px-4">
-                                <img src="http://localhost:5174/assets/images/location_map.png" alt="Location Map" className="w-full h-auto max-w-sm mx-auto rounded-[3rem] shadow-2xl border-4 border-white transform group-hover:scale-105 transition-transform duration-700" />
+                                <img src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/04_obj02.png?raw=true" alt="Location Map" className="w-full h-auto max-w-sm mx-auto transform group-hover:scale-105 transition-transform duration-700 drop-shadow-2xl" />
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Monthly Sales Booster Package Section */}
-            <section className="py-32 bg-slate-50 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-500/20 to-transparent"></div>
-                <div className="max-w-6xl mx-auto px-6 relative z-10">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-                        <div className="space-y-4">
-                            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-orange-100 text-orange-600 rounded-full text-xs font-black tracking-widest uppercase mb-2">
-                                Monthly Update
-                            </div>
-                            <h2 className="text-4xl md:text-5xl font-black text-slate-900 flex items-center gap-3">
-                                이번 달 매출 부스터 패키지 📈
-                            </h2>
-                            <p className="text-xl text-slate-500 font-bold">
-                                시즌별 최적화된 레시피와 마케팅 가이드를 확인하세요.
-                            </p>
-                        </div>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Recipe Card */}
-                        <div className="bg-white rounded-[3rem] overflow-hidden shadow-2xl shadow-slate-200/60 border border-slate-100 flex flex-col group transition-all duration-500 hover:-translate-y-2">
-                            <div className="p-8 md:p-10 pb-0 flex items-center justify-between">
-                                <h3 className="text-2xl font-black text-slate-900">신메뉴 레시피: 6월의 파이</h3>
-                                <span className="px-3 py-1 bg-orange-500 text-white text-[10px] font-black rounded-lg animate-pulse">NEW</span>
-                            </div>
-                            <div className="p-8 md:p-10 space-y-8 flex-1">
-                                <div className="relative aspect-[16/9] rounded-[2rem] overflow-hidden">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=2080&auto=format&fit=crop"
-                                        alt="Tropical Cream Pie"
-                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                                    <div className="absolute bottom-6 left-6 text-white">
-                                        <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80 mb-1">Seasonal Special</p>
-                                        <p className="text-2xl font-black">트로피컬 크림 파이</p>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <h4 className="text-xl font-black text-slate-800">여름 한정 '트로피컬 크림 파이'</h4>
-                                    <div className="space-y-3">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 bg-green-50 rounded-lg flex items-center justify-center text-green-500 text-xs">✓</div>
-                                            <p className="text-sm font-bold text-slate-600">권장 소비자가: <span className="text-slate-900">4,800원</span></p>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 bg-blue-50 rounded-lg flex items-center justify-center text-blue-500 text-xs">✓</div>
-                                            <p className="text-sm font-bold text-slate-600">타겟 고객: <span className="text-slate-900">2030 여성, 간식 구매자</span></p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button className="w-full py-5 bg-slate-900 text-white rounded-[1.5rem] font-black text-sm hover:bg-orange-500 transition-all flex items-center justify-center gap-2 group/btn shadow-xl shadow-slate-900/20">
-                                    레시피 다운로드
-                                    <svg className="w-4 h-4 transform group-hover/btn:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Marketing Guide Card */}
-                        <div className="bg-white rounded-[3rem] p-8 md:p-10 shadow-2xl shadow-slate-200/60 border border-slate-100 flex flex-col group transition-all duration-500 hover:-translate-y-2">
-                            <h3 className="text-2xl font-black text-slate-900 mb-10">배달앱 최적화 가이드</h3>
-
-                            <div className="space-y-6 flex-1">
-                                <div className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 space-y-3 hover:bg-white hover:border-orange-500/30 transition-all cursor-default">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">썸네일 문구 템플릿</p>
-                                    <p className="text-base font-black text-slate-800 leading-relaxed">
-                                        "한 입의 행복, 120겹의 기적" <br />
-                                        <span className="text-orange-500">- 클릭률 15% 상승 효과</span>
-                                    </p>
-                                </div>
-
-                                <div className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 space-y-3 hover:bg-white hover:border-orange-500/30 transition-all cursor-default">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">인기 메뉴 조합</p>
-                                    <p className="text-base font-black text-slate-800 leading-relaxed">
-                                        에그베이컨 파이 + 아메리카노 SET <br />
-                                        <span className="text-orange-500">(할인가 7,500원)</span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="mt-10">
-                                <button className="w-full py-5 bg-orange-500 text-white rounded-[1.5rem] font-black text-sm hover:bg-slate-900 transition-all flex items-center justify-center gap-2 group/btn shadow-xl shadow-orange-500/20">
-                                    6월 운영안 확인하기
-                                    <svg className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             {/* Pricing / Full Package - Subscription Model */}
             <section id="pricing" className="py-32 bg-slate-900 relative overflow-hidden">
@@ -669,7 +577,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                             {/* egg120 Membership Card */}
                             <div className="bg-white rounded-[4rem] overflow-hidden shadow-2xl flex flex-col group transition-all duration-500">
                                 <div className="h-64 overflow-hidden relative">
-                                    <img src="https://github.com/jihoon3813-commits/img_120/blob/main/%5B%ED%81%AC%EA%B8%B0%EB%B3%80%ED%99%98%5D240503_120%EA%B2%B9%ED%8C%8C%EC%9D%B40928.jpg?raw=true" alt="egg120 Membership" className="w-full h-full object-cover transform scale-110 group-hover:scale-125 transition-transform duration-1000" />
+                                    <img src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/egg120_%EB%A9%94%EC%9D%B8_%EB%B0%B0%EB%84%88.jpg?raw=true" alt="egg120 Membership" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                                     <div className="absolute top-8 left-8">
                                         <span className="bg-slate-900 text-white px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest">Recommended Plan</span>
@@ -845,8 +753,54 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
             </section>
 
+            {/* NEW: Promotional Materials Section */}
+            <section className="py-32 bg-slate-50 relative overflow-hidden">
+                <div className="max-w-6xl mx-auto px-6 relative z-10">
+                    <div className="text-center mb-16 space-y-4">
+                        <span className="bg-orange-500/10 text-orange-500 px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase border border-orange-500/20">Marketing Materials</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
+                            시선을 사로잡는 <br className="md:hidden" />
+                            <span className="text-orange-500">홍보물 기본 제공</span>
+                        </h2>
+                        <p className="text-slate-500 text-lg font-medium max-w-2xl mx-auto">
+                            오프라인 매장 운영에 필수적인 전단지와 메뉴판을 지원해 드립니다.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Flyer */}
+                        <div className="bg-white rounded-[3rem] p-6 md:p-10 shadow-xl border border-slate-100 group cursor-pointer" onClick={() => setSelectedImage("https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EC%A0%84%EB%8B%A8%EC%A7%80.jpg?raw=true")}>
+                            <h3 className="text-2xl font-black text-slate-900 mb-6 flex items-center justify-between">
+                                전단지
+                                <svg className="w-6 h-6 text-slate-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+                            </h3>
+                            <div className="aspect-[3/4] rounded-[2rem] overflow-hidden bg-slate-100 relative">
+                                <img src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EC%A0%84%EB%8B%A8%EC%A7%80.jpg?raw=true" alt="전단지" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                                    <span className="opacity-0 group-hover:opacity-100 bg-white/90 text-slate-900 font-bold px-4 py-2 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-xl">크게 보기</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Menu Board */}
+                        <div className="bg-white rounded-[3rem] p-6 md:p-10 shadow-xl border border-slate-100 group cursor-pointer" onClick={() => setSelectedImage("https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%A9%94%EB%89%B4%ED%8C%90.png?raw=true")}>
+                            <h3 className="text-2xl font-black text-slate-900 mb-6 flex items-center justify-between">
+                                메뉴판
+                                <svg className="w-6 h-6 text-slate-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+                            </h3>
+                            <div className="aspect-[3/4] rounded-[2rem] overflow-hidden bg-slate-100 relative">
+                                <img src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%A9%94%EB%89%B4%ED%8C%90.png?raw=true" alt="메뉴판" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 pointer-events-none" />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                                    <span className="opacity-0 group-hover:opacity-100 bg-white/90 text-slate-900 font-bold px-4 py-2 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-xl">크게 보기</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Consultation Form Section */}
-            <section id="consult" className="py-32 bg-white">
+            <section id="consult" className="py-32 bg-white relative">
                 <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                     <div className="space-y-8">
                         <h2 className="text-5xl font-black text-slate-900 leading-tight">지금 바로 <br /><span className="text-orange-500">성공의 기회</span>를 잡으세요.</h2>
@@ -915,6 +869,28 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                     </div>
                 </div>
             </footer>
+
+            {/* Image Zoom Modal */}
+            {selectedImage && (
+                <div 
+                    className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-slate-900/90 backdrop-blur-sm cursor-zoom-out animate-in fade-in duration-300"
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <div className="relative max-w-5xl w-full h-full max-h-[90vh] flex items-center justify-center">
+                        <img 
+                            src={selectedImage} 
+                            alt="Expanded View" 
+                            className="max-w-full max-h-full object-contain rounded-2xl shadow-4xl transform scale-100 animate-in zoom-in-95 duration-300"
+                        />
+                        <button 
+                            className="absolute -top-4 -right-4 sm:top-0 sm:-right-12 w-10 h-10 bg-white text-slate-900 rounded-full flex items-center justify-center shadow-2xl hover:bg-orange-500 hover:text-white transition-colors"
+                            onClick={() => setSelectedImage(null)}
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

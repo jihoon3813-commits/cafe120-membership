@@ -18,7 +18,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             {/* Hero Section */}
             <div className="relative h-[400px] w-full rounded-[3rem] overflow-hidden shadow-2xl mb-12 group">
                 <img
-                    src="https://github.com/jihoon3813-commits/img_120/blob/main/%5B%ED%81%AC%EA%B8%B0%EB%B3%80%ED%99%98%5D%EC%A0%9C%ED%92%88_120%EA%B2%B9_2.JPG?raw=true"
+                    src="https://raw.githubusercontent.com/jihoon3813-commits/img_120/main/%5B%ED%81%AC%EA%B8%B0%EB%B3%80%ED%99%98%5D%EC%A0%9C%ED%92%88_120%EA%B2%B9_2.JPG"
                     alt="cafe120 Hero"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />

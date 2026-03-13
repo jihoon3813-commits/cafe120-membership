@@ -133,7 +133,7 @@ const SalesBoost: React.FC<SalesBoostProps> = ({ user }) => {
     };
 
     const assets = [
-        { name: 'Brand Logo', type: 'PNG (Transparent)', url: 'https://github.com/jihoon3813-commits/img_120/blob/main/egg120_logo_2.png?raw=true' },
+        { name: 'Brand Logo', type: 'PNG (Transparent)', url: 'https://raw.githubusercontent.com/jihoon3813-commits/img_120/main/egg120_logo_2.png' },
         { name: 'Original Menu', type: 'High-Res JPG', url: 'https://cdn.imweb.me/upload/S2025012040623186e3bd4/611372b19d376.png' },
         { name: 'Bacon Menu', type: 'High-Res JPG', url: 'https://cdn.imweb.me/upload/S2025012040623186e3bd4/361fc20931736.png' },
         { name: 'Custard Menu', type: 'High-Res JPG', url: 'https://cdn.imweb.me/upload/S2025012040623186e3bd4/5872657a6276b.png' },
