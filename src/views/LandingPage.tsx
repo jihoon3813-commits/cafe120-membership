@@ -72,7 +72,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                 <div className="max-w-7xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between">
                     <div className="flex items-center cursor-pointer h-full" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                         <img
-                            src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/120%EA%B2%B9%ED%8C%8C%EC%9D%B4_%EC%9B%90%ED%98%95%EB%A1%9C%EA%B3%A0.png?raw=true"
+                            src="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/120%EA%B2%B9%ED%8C%8C%EC%9D%B4_%EC%9B%90%ED%98%95%EB%A1%9C%EA%B3%A0.png"
                             alt="EGG 120"
                             className="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-105"
                         />
@@ -262,7 +262,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                         <div className="relative animate-in fade-in slide-in-from-right duration-1000 delay-300">
                             <div className="absolute -inset-10 bg-orange-50 rounded-full blur-[100px] opacity-70"></div>
                             <img
-                                src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg?raw=true"
+                                src="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg"
                                 alt="Real Egg Structure"
                                 className="relative w-full h-auto rounded-[2rem] shadow-2xl transform scale-110 hover:scale-[1.15] transition-transform duration-700"
                             />
@@ -339,10 +339,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                                 {[
-                                    { name: '팥', en: 'Red Bean Filling Egg Bread', desc: '붕어빵 보다 더 맛있어요', img: 'https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%88%84%EB%81%BC_%ED%8C%A5.png?raw=true' },
-                                    { name: '슈크림', en: 'Cream Puff Egg Bread', desc: '십원빵 보다 더 맛있어요', img: 'https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%88%84%EB%81%BC_%EC%8A%88%ED%81%AC%EB%A6%BC.png?raw=true' },
-                                    { name: '통모짜', en: 'Mozzarella Chunk Egg Bread', badges: ['추천'], img: 'https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%88%84%EB%81%BC_%ED%86%B5%EB%AA%A8%EC%A7%9C.png?raw=true' },
-                                    { name: '로제미트', en: 'Rose Meat Egg Bread', img: 'https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%88%84%EB%81%BC_%EB%A1%9C%EC%A0%9C%EB%AF%B8%ED%8A%B8.png?raw=true' }
+                                    { name: '팥', en: 'Red Bean Filling Egg Bread', desc: '붕어빵 보다 더 맛있어요', img: 'https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EB%88%84%EB%81%BC_%ED%8C%A5.png' },
+                                    { name: '슈크림', en: 'Cream Puff Egg Bread', desc: '십원빵 보다 더 맛있어요', img: 'https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EB%88%84%EB%81%BC_%EC%8A%88%ED%81%AC%EB%A6%BC.png' },
+                                    { name: '통모짜', en: 'Mozzarella Chunk Egg Bread', badges: ['추천'], img: 'https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EB%88%84%EB%81%BC_%ED%86%B5%EB%AA%A8%EC%A7%9C.png' },
+                                    { name: '로제미트', en: 'Rose Meat Egg Bread', img: 'https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EB%88%84%EB%81%BC_%EB%A1%9C%EC%A0%9C%EB%AF%B8%ED%8A%B8.png' }
                                 ].map((item, idx) => (
                                     <div key={idx} className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden group hover:shadow-2xl transition-all duration-500">
                                         <div className="aspect-square bg-slate-100 relative overflow-hidden">
@@ -463,7 +463,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                                 </p>
                             </div>
                             <div className="flex-1 px-4">
-                                <img src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/04_obj02.png?raw=true" alt="Location Map" className="w-full h-auto max-w-sm mx-auto transform group-hover:scale-105 transition-transform duration-700 drop-shadow-2xl" />
+                                <img src="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/04_obj02.png" alt="Location Map" className="w-full h-auto max-w-sm mx-auto transform group-hover:scale-105 transition-transform duration-700 drop-shadow-2xl" />
                             </div>
                         </div>
                     </div>
@@ -577,7 +577,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                             {/* egg120 Membership Card */}
                             <div className="bg-white rounded-[4rem] overflow-hidden shadow-2xl flex flex-col group transition-all duration-500">
                                 <div className="h-64 overflow-hidden relative">
-                                    <img src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/egg120_%EB%A9%94%EC%9D%B8_%EB%B0%B0%EB%84%88.jpg?raw=true" alt="egg120 Membership" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                                    <img src="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/egg120_%EB%A9%94%EC%9D%B8_%EB%B0%B0%EB%84%88.jpg" alt="egg120 Membership" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                                     <div className="absolute top-8 left-8">
                                         <span className="bg-slate-900 text-white px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest">Recommended Plan</span>
@@ -769,13 +769,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Flyer */}
-                        <div className="bg-white rounded-[3rem] p-6 md:p-10 shadow-xl border border-slate-100 group cursor-pointer" onClick={() => setSelectedImage("https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EC%A0%84%EB%8B%A8%EC%A7%80.jpg?raw=true")}>
+                        <div className="bg-white rounded-[3rem] p-6 md:p-10 shadow-xl border border-slate-100 group cursor-pointer" onClick={() => setSelectedImage("https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%84%EB%8B%A8%EC%A7%80.jpg")}>
                             <h3 className="text-2xl font-black text-slate-900 mb-6 flex items-center justify-between">
                                 전단지
                                 <svg className="w-6 h-6 text-slate-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
                             </h3>
                             <div className="aspect-[3/4] rounded-[2rem] overflow-hidden bg-slate-100 relative">
-                                <img src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EC%A0%84%EB%8B%A8%EC%A7%80.jpg?raw=true" alt="전단지" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                                <img src="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%84%EB%8B%A8%EC%A7%80.jpg" alt="전단지" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
                                     <span className="opacity-0 group-hover:opacity-100 bg-white/90 text-slate-900 font-bold px-4 py-2 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-xl">크게 보기</span>
                                 </div>
@@ -783,13 +783,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                         </div>
 
                         {/* Menu Board */}
-                        <div className="bg-white rounded-[3rem] p-6 md:p-10 shadow-xl border border-slate-100 group cursor-pointer" onClick={() => setSelectedImage("https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%A9%94%EB%89%B4%ED%8C%90.png?raw=true")}>
+                        <div className="bg-white rounded-[3rem] p-6 md:p-10 shadow-xl border border-slate-100 group cursor-pointer" onClick={() => setSelectedImage("https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EB%A9%94%EB%89%B4%ED%8C%90.png")}>
                             <h3 className="text-2xl font-black text-slate-900 mb-6 flex items-center justify-between">
                                 메뉴판
                                 <svg className="w-6 h-6 text-slate-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
                             </h3>
                             <div className="aspect-[3/4] rounded-[2rem] overflow-hidden bg-slate-100 relative">
-                                <img src="https://github.com/jihoon3813-commits/imgs_cafe120/blob/main/%EB%A9%94%EB%89%B4%ED%8C%90.png?raw=true" alt="메뉴판" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 pointer-events-none" />
+                                <img src="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EB%A9%94%EB%89%B4%ED%8C%90.png" alt="메뉴판" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 pointer-events-none" />
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
                                     <span className="opacity-0 group-hover:opacity-100 bg-white/90 text-slate-900 font-bold px-4 py-2 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-xl">크게 보기</span>
                                 </div>
