@@ -4,9 +4,10 @@ import { Product } from '../types';
 
 interface PricingProps {
     onSelectMembership: (type: string) => void;
+    onViewProduct: (productId: string) => void;
 }
 
-const Pricing: React.FC<PricingProps> = ({ onSelectMembership }) => {
+const Pricing: React.FC<PricingProps> = ({ onSelectMembership, onViewProduct }) => {
     const [memberships, setMemberships] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -104,16 +105,26 @@ const Pricing: React.FC<PricingProps> = ({ onSelectMembership }) => {
                                 ))}
                             </ul>
 
-                            <button
-                                onClick={() => onSelectMembership(item.id)}
-                                className={`w-full py-5 rounded-2xl font-black transition-all transform active:scale-[0.98] ${item.isPremium
-                                    ? 'bg-orange-500 text-white shadow-xl shadow-orange-500/20 hover:bg-orange-600'
-                                    : item.color === 'slate'
-                                        ? 'bg-white text-slate-900 hover:bg-orange-50'
-                                        : 'bg-slate-900 text-white hover:bg-slate-800'
-                                    }`}>
-                                멤버십 신청하기
-                            </button>
+                            <div className="space-y-3">
+                                <button
+                                    onClick={() => onViewProduct(item.id)}
+                                    className={`w-full py-3.5 rounded-xl font-bold transition-all border-2 ${item.color === 'slate'
+                                        ? 'border-white/10 text-white hover:bg-white/5'
+                                        : 'border-orange-500/20 text-orange-600 hover:bg-orange-50'
+                                        }`}>
+                                    상품 자세히 보기
+                                </button>
+                                <button
+                                    onClick={() => onSelectMembership(item.id)}
+                                    className={`w-full py-5 rounded-2xl font-black transition-all transform active:scale-[0.98] ${item.isPremium
+                                        ? 'bg-orange-500 text-white shadow-xl shadow-orange-500/20 hover:bg-orange-600'
+                                        : item.color === 'slate'
+                                            ? 'bg-white text-slate-900 hover:bg-orange-50'
+                                            : 'bg-slate-900 text-white hover:bg-slate-800'
+                                        }`}>
+                                    멤버십 신청하기
+                                </button>
+                            </div>
                         </div>
                     </div>
                 ))}

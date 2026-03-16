@@ -77,10 +77,17 @@ const App: React.FC = () => {
                 return <BusinessApps />;
 
             case MenuCategory.PRICING:
-                return <Pricing onSelectMembership={(type) => {
-                    setPreSelectedMembership(type);
-                    setActiveMenu(MenuCategory.REGISTER);
-                }} />;
+                return <Pricing
+                    onSelectMembership={(type) => {
+                        setPreSelectedMembership(type);
+                        setActiveMenu(MenuCategory.REGISTER);
+                    }}
+                    onViewProduct={(productId) => {
+                        setSelectedProductId(productId);
+                        setActiveMenu(MenuCategory.LANDING);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                />;
             case MenuCategory.LOGIN:
                 return <Login onLoginSuccess={handleLogin} onNavigateToRegister={() => {
                     setPreSelectedMembership(undefined);
