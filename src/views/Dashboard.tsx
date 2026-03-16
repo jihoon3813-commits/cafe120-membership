@@ -17,11 +17,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                 if (url) {
                     setVideoUrl(url);
                 } else {
-                    setVideoUrl(`https://majestic-condor-361.convex.cloud/api/storage/${VIDEO_STORAGE_ID}`);
+                    setVideoUrl(`https://majestic-condor-361.convex.site/api/storage?storageId=${VIDEO_STORAGE_ID}`);
                 }
             } catch (e) {
                 console.error('Failed to fetch video URL:', e);
-                setVideoUrl(`https://majestic-condor-361.convex.cloud/api/storage/${VIDEO_STORAGE_ID}`);
+                setVideoUrl(`https://majestic-condor-361.convex.site/api/storage?storageId=${VIDEO_STORAGE_ID}`);
             }
         };
         fetchVideoUrl();

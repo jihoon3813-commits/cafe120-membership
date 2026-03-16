@@ -27,15 +27,20 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
             try {
                 const url = await dbService.getStorageUrl(VIDEO_STORAGE_ID);
                 if (url) {
+                    console.log('Video URL fetched from Convex:', url);
                     setVideoUrl(url);
                 } else {
-                    // Fallback to direct HTTP action URL
-                    setVideoUrl(`https://majestic-condor-361.convex.cloud/api/storage/${VIDEO_STORAGE_ID}`);
+                    // Fallback 1: Standard .site query param
+                    const fallback1 = `https://majestic-condor-361.convex.site/api/storage?storageId=${VIDEO_STORAGE_ID}`;
+                    // Fallback 2: New .cloud path param
+                    const fallback2 = `https://majestic-condor-361.convex.cloud/api/storage/${VIDEO_STORAGE_ID}`;
+                    
+                    console.log('Video URL from query failed, using fallbacks:', { fallback1, fallback2 });
+                    setVideoUrl(fallback1); // Default to .site with query for now
                 }
             } catch (e) {
                 console.error('Failed to fetch video URL:', e);
-                // Fallback to direct URL on error
-                setVideoUrl(`https://majestic-condor-361.convex.cloud/api/storage/${VIDEO_STORAGE_ID}`);
+                setVideoUrl(`https://majestic-condor-361.convex.site/api/storage?storageId=${VIDEO_STORAGE_ID}`);
             }
         };
         if (productId === 'egg120') {

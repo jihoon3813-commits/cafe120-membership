@@ -106,17 +106,16 @@ const Pricing: React.FC<PricingProps> = ({ onSelectMembership, onViewProduct }) 
                             </ul>
 
                             <div className="space-y-3">
-                                <button
-                                    onClick={() => {
-                                        const url = `${window.location.origin}${window.location.pathname}?p=${item.id}`;
-                                        window.open(url, '_blank');
-                                    }}
-                                    className={`w-full py-3.5 rounded-xl font-bold transition-all border-2 ${item.color === 'slate'
+                                <a
+                                    href={`${window.location.origin}${window.location.pathname}?p=${item.id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`w-full py-3.5 rounded-xl font-bold transition-all border-2 text-center block ${item.color === 'slate'
                                         ? 'border-white/10 text-white hover:bg-white/5'
                                         : 'border-orange-500/20 text-orange-600 hover:bg-orange-50'
                                         }`}>
                                     상품 자세히 보기
-                                </button>
+                                </a>
                                 <button
                                     onClick={() => onSelectMembership(item.id)}
                                     className={`w-full py-5 rounded-2xl font-black transition-all transform active:scale-[0.98] ${item.isPremium
