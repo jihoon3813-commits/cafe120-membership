@@ -10,6 +10,7 @@
 
 import type * as ai from "../ai.js";
 import type * as configs from "../configs.js";
+import type * as http from "../http.js";
 import type * as leads from "../leads.js";
 import type * as openai from "../openai.js";
 import type * as products from "../products.js";
@@ -28,6 +29,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   ai: typeof ai;
   configs: typeof configs;
+  http: typeof http;
   leads: typeof leads;
   openai: typeof openai;
   products: typeof products;

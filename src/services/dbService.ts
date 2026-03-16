@@ -305,8 +305,13 @@ export const dbService = {
         // @ts-ignore
         return await getConvex().mutation(api.stores.updateStore, { id, ...data });
     },
+
     async deleteStores(ids: string[]) {
         // @ts-ignore
         return await getConvex().mutation(api.stores.deleteStores, { ids });
+    },
+    async getStorageUrl(storageId: string) {
+        // @ts-ignore
+        return await getConvex().query(api.resources.getStorageUrl, { storageId });
     }
 };

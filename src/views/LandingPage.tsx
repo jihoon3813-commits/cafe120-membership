@@ -19,6 +19,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
     });
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [videoUrl, setVideoUrl] = useState<string | null>(null);
+    const VIDEO_STORAGE_ID = 'kg28twweegxsq8qcpggbg5e9k183123k';
+
+    useEffect(() => {
+        const fetchVideoUrl = async () => {
+            try {
+                const url = await dbService.getStorageUrl(VIDEO_STORAGE_ID);
+                setVideoUrl(url);
+            } catch (e) {
+                console.error('Failed to fetch video URL:', e);
+            }
+        };
+        if (productId === 'egg120') {
+            fetchVideoUrl();
+        }
+    }, [productId]);
 
     const getReliableUrl = (url: string) => {
         if (!url) return '';
@@ -163,19 +179,30 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
 
                     <div className="relative animate-in fade-in zoom-in duration-1000 delay-300">
                         <div className="absolute -inset-4 bg-orange-500/10 rounded-[3rem] blur-2xl"></div>
-                        <div className="relative rounded-[3rem] overflow-hidden shadow-3xl border-8 border-white">
-                            <img 
-                                src={productId === 'egg120' ? "https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg" : getReliableUrl(product.image)} 
-                                alt={product.name} 
-                                className="w-full h-auto object-cover transform hover:scale-110 transition-transform duration-700 font-bold"
-                                onError={(e) => {
-                                    // Fallback if the database image is broken
-                                    const target = e.target as HTMLImageElement;
-                                    if (productId === 'egg120') {
+                        <div className="relative rounded-[3rem] overflow-hidden shadow-3xl border-8 border-white aspect-video bg-black">
+                            {productId === 'egg120' ? (
+                                <video
+                                    className="w-full h-full object-cover"
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    poster="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/egg120%20%EC%BA%90%EB%A6%AD%ED%84%B0_%EC%BB%A4%EB%B2%84.png"
+                                >
+                                    {videoUrl && <source src={videoUrl} type="video/mp4" />}
+                                    Your browser does not support the video tag.
+                                </video>
+                            ) : (
+                                <img 
+                                    src={getReliableUrl(product.image)} 
+                                    alt={product.name} 
+                                    className="w-full h-auto object-cover transform hover:scale-110 transition-transform duration-700 font-bold"
+                                    onError={(e) => {
+                                        const target = e.target as HTMLImageElement;
                                         target.src = "https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg";
-                                    }
-                                }}
-                            />
+                                    }}
+                                />
+                            )}
                         </div>
                         {/* Summary Badges */}
                         <div className="absolute -top-8 -right-8 bg-white p-6 rounded-3xl shadow-2xl border border-orange-50 animate-bounce delay-700 hidden md:block">
@@ -207,7 +234,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                     <div className="relative max-w-4xl mx-auto mb-20">
                         {/* Central Image Container */}
                         <div className="relative z-10 w-64 h-64 md:w-80 md:h-80 mx-auto rounded-full overflow-hidden border-8 border-white shadow-2xl">
-                            <img src="https://cdn.imweb.me/upload/S2025012040623186e3bd4/6bc08568cdf40.jpg" alt="Real Egg Bread" className="w-full h-full object-cover" />
+                            <img src="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/egg120%20%EC%BA%90%EB%A6%AD%ED%84%B0_%EC%BB%A4%EB%B2%84.png" alt="Real Egg Bread" className="w-full h-full object-cover" />
                         </div>
 
                         {/* ZERO Cards - Surrounding the image */}

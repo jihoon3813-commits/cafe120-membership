@@ -61,3 +61,10 @@ export const deleteResource = mutation({
         await ctx.db.delete(args.id);
     },
 });
+
+export const getStorageUrl = query({
+    args: { storageId: v.string() },
+    handler: async (ctx, args) => {
+        return await ctx.storage.getUrl(args.storageId);
+    },
+});

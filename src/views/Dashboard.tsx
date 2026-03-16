@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MenuCategory } from '../types';
+import { dbService } from '../services/dbService';
 
 interface DashboardProps {
     onNavigate: (menu: MenuCategory) => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+    const [videoUrl, setVideoUrl] = useState<string | null>(null);
+    const VIDEO_STORAGE_ID = 'kg28twweegxsq8qcpggbg5e9k183123k';
+
+    React.useEffect(() => {
+        const fetchVideoUrl = async () => {
+            try {
+                const url = await dbService.getStorageUrl(VIDEO_STORAGE_ID);
+                setVideoUrl(url);
+            } catch (e) {
+                console.error('Failed to fetch video URL:', e);
+            }
+        };
+        fetchVideoUrl();
+    }, []);
+
     const pillars = [
         { title: '매출 부스트 솔루션', desc: '전문적인 매출 향상을 도와주는 전략 패키지', icon: '📈', cat: MenuCategory.SALES },
         { title: '비즈니스+ APPs', desc: 'AI 자동 홍보물 생성 및 비즈니스 도구', icon: '🚀', cat: MenuCategory.APPS },
@@ -16,12 +32,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Hero Section */}
-            <div className="relative h-[400px] w-full rounded-[3rem] overflow-hidden shadow-2xl mb-12 group">
-                <img
-                    src="https://raw.githubusercontent.com/jihoon3813-commits/img_120/main/%5B%ED%81%AC%EA%B8%B0%EB%B3%80%ED%99%98%5D%EC%A0%9C%ED%92%88_120%EA%B2%B9_2.JPG"
-                    alt="cafe120 Hero"
+            <div className="relative h-[400px] w-full rounded-[3rem] overflow-hidden shadow-2xl mb-12 group bg-black">
+                <video
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    poster="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/egg120%20%EC%BA%90%EB%A6%AD%ED%84%B0_%EC%BB%A4%EB%B2%84.png"
+                >
+                    {videoUrl && <source src={videoUrl} type="video/mp4" />}
+                    Your browser does not support the video tag.
+                </video>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-10 md:p-16">
                     <span className="inline-block px-4 py-1 bg-orange-500 text-white text-xs font-black rounded-full mb-4 w-fit animate-bounce">NEW PREMIUM</span>
                     <h1 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
