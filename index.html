@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cafe120 Membership Plus</title>
+  <meta name="description" content="cafe120 비즈니스+ 멤버십으로 스마트하게 성장하세요." />
+
+  <!-- Open Graph / SNS Share -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="cafe120 Membership Plus" />
+  <meta property="og:description" content="비즈니스 성장을 위한 단 하나의 선택, 에그120 & 120겹파이 멤버십 솔루션" />
+  <meta property="og:image"
+    content="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg" />
+  <meta property="og:url" content="https://cafe120-membership.vercel.app" />
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="cafe120 Membership Plus" />
+  <meta name="twitter:description" content="비즈니스 성장을 위한 단 하나의 선택, 에그120 & 120겹파이 멤버십 솔루션" />
+  <meta name="twitter:image"
+    content="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/%EC%A0%9C%ED%92%88_%ED%8C%A8%ED%82%A4%EC%A7%80_1.jpg" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png"
+    href="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/120%EA%B2%B9%ED%8C%8C%EC%9D%B4_%EC%9B%90%ED%98%95%EB%A1%9C%EA%B3%A0.png" />
+  <link rel="shortcut icon"
+    href="https://raw.githubusercontent.com/jihoon3813-commits/imgs_cafe120/main/120%EA%B2%B9%ED%8C%8C%EC%9D%B4_%EC%9B%90%ED%98%95%EB%A1%9C%EA%B3%A0.png" />
+
+  <!-- Global Error Handler -->
+  <script>
+    window.onerror = function (message, source, lineno, colno, error) {
+      const errorContainer = document.getElementById('global-error-display') || document.createElement('div');
+      errorContainer.id = 'global-error-display';
+      errorContainer.style.position = 'fixed';
+      errorContainer.style.top = '0';
+      errorContainer.style.left = '0';
+      errorContainer.style.width = '100%';
+      errorContainer.style.backgroundColor = '#fee2e2';
+      errorContainer.style.color = '#991b1b';
+      errorContainer.style.padding = '20px';
+      errorContainer.style.zIndex = '9999';
+      errorContainer.style.borderBottom = '1px solid #f87171';
+      errorContainer.style.fontFamily = 'monospace';
+
+      const msg = document.createElement('div');
+      msg.innerText = `Error: ${message}\nSource: ${source}:${lineno}:${colno}`;
+      errorContainer.appendChild(msg);
+
+      if (error && error.stack) {
+        const stack = document.createElement('pre');
+        stack.style.marginTop = '10px';
+        stack.innerText = error.stack;
+        errorContainer.appendChild(stack);
+      }
+
+      document.body.appendChild(errorContainer);
+    };
+
+    window.onunhandledrejection = function (event) {
+      console.error("Unhandled Rejection:", event.reason);
+    };
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    /* Tailwind Typography & Animate-in utilities */
+    @layer utilities {
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes zoom-in {
+        from {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .animate-in {
+        animation-duration: 300ms;
+        animation-fill-mode: both;
+      }
+
+      .fade-in {
+        animation-name: fade-in;
+      }
+
+      .zoom-in {
+        animation-name: zoom-in;
+      }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <script type="module" crossorigin src="/cafe120-membership/assets/index-DOMuI5KQ.js"></script>
+  <link rel="stylesheet" crossorigin href="/cafe120-membership/assets/index-D_m6yeHG.css">
+</head>
+
+<body class="bg-gray-50 text-slate-900">
+  <div id="root"></div>
+</body>
+
+</html>
