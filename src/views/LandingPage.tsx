@@ -909,12 +909,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                                         inputMode="tel"
                                         value={formData.phone}
                                         onChange={(e) => {
-                                            const value = e.target.value.replace(/[^0-9]/g, '');
-                                            let formatted = value;
-                                            if (value.length > 3 && value.length <= 7) {
-                                                formatted = `${value.slice(0, 3)}-${value.slice(3)}`;
-                                            } else if (value.length > 7) {
-                                                formatted = `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
+                                            const input = e.target.value.replace(/[^0-9]/g, '');
+                                            let formatted = '';
+                                            if (input.length <= 3) {
+                                                formatted = input;
+                                            } else if (input.length <= 7) {
+                                                formatted = `${input.slice(0, 3)}-${input.slice(3)}`;
+                                            } else {
+                                                formatted = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(7, 11)}`;
                                             }
                                             setFormData({ ...formData, phone: formatted });
                                         }}
