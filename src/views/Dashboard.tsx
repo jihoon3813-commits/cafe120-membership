@@ -8,7 +8,7 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
-    const VIDEO_STORAGE_ID = 'kg28twweegxsq8qcpggbg5e9k183123k';
+    const VIDEO_STORAGE_ID = 'kg2cff9exrbw6c3dg8bg33e5y98305dn';
 
     React.useEffect(() => {
         const fetchVideoUrl = async () => {
