@@ -107,7 +107,10 @@ const Pricing: React.FC<PricingProps> = ({ onSelectMembership, onViewProduct }) 
 
                             <div className="space-y-3">
                                 <button
-                                    onClick={() => onViewProduct(item.id)}
+                                    onClick={() => {
+                                        const url = `${window.location.origin}${window.location.pathname}?p=${item.id}`;
+                                        window.open(url, '_blank');
+                                    }}
                                     className={`w-full py-3.5 rounded-xl font-bold transition-all border-2 ${item.color === 'slate'
                                         ? 'border-white/10 text-white hover:bg-white/5'
                                         : 'border-orange-500/20 text-orange-600 hover:bg-orange-50'
