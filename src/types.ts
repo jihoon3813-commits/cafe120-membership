@@ -47,7 +47,7 @@ export interface Product {
 }
 
 export interface Lead {
-    id: string;
+    _id: string;
     productId: string;
     productName: string;
     name: string;

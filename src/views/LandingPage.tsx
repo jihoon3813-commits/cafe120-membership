@@ -71,12 +71,20 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
         e.preventDefault();
         if (!product) return;
 
-        await dbService.submitLead({
-            ...formData,
-            productId: product.id,
-            productName: product.name
-        });
-        setFormSubmitted(true);
+        try {
+            await dbService.submitLead({
+                ...formData,
+                productId: product.id,
+                productName: product.name
+            });
+            setFormSubmitted(true);
+            // Scroll to form success message
+            const consultSection = document.getElementById('consult');
+            consultSection?.scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            console.error('Lead submission error:', error);
+            alert('신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        }
     };
 
     if (loading) {
@@ -895,7 +903,24 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-black text-slate-400 ml-1 uppercase tracking-widest">연락처</label>
-                                    <input type="tel" required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-6 py-5 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all font-bold text-lg" placeholder="010-0000-0000" />
+                                    <input
+                                        type="tel"
+                                        required
+                                        inputMode="tel"
+                                        value={formData.phone}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/[^0-9]/g, '');
+                                            let formatted = value;
+                                            if (value.length > 3 && value.length <= 7) {
+                                                formatted = `${value.slice(0, 3)}-${value.slice(3)}`;
+                                            } else if (value.length > 7) {
+                                                formatted = `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
+                                            }
+                                            setFormData({ ...formData, phone: formatted });
+                                        }}
+                                        className="w-full px-6 py-5 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all font-bold text-lg"
+                                        placeholder="010-0000-0000"
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-black text-slate-400 ml-1 uppercase tracking-widest">업체명 (선택)</label>

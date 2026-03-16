@@ -47,12 +47,19 @@ const ProductManagement: React.FC = () => {
     };
 
     const loadData = async () => {
-        const [p, l] = await Promise.all([
-            dbService.getProducts(),
-            dbService.getLeads()
-        ]);
-        setProducts(p);
-        setLeads(l);
+        try {
+            console.log('Fetching data...');
+            const [p, l] = await Promise.all([
+                dbService.getProducts(),
+                dbService.getLeads()
+            ]);
+            console.log('Products:', p.length);
+            console.log('Leads:', l.length, l);
+            setProducts(p);
+            setLeads(l);
+        } catch (error) {
+            console.error('Failed to load data:', error);
+        }
     };
 
     const handleSaveProduct = async (e: React.FormEvent) => {
@@ -244,7 +251,7 @@ const ProductManagement: React.FC = () => {
                                     </tr>
                                 ) : (
                                     leads.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((lead) => (
-                                        <tr key={lead.id} className="hover:bg-slate-50 transition-colors">
+                                        <tr key={lead._id} className="hover:bg-slate-50 transition-colors">
                                             <td className="px-8 py-5 text-sm font-medium text-slate-500">{new Date(lead.createdAt).toLocaleDateString()}</td>
                                             <td className="px-8 py-5">
                                                 <span className="px-3 py-1 bg-orange-50 text-orange-600 text-xs font-black rounded-lg">{lead.productName}</span>
