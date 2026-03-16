@@ -14,9 +14,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         const fetchVideoUrl = async () => {
             try {
                 const url = await dbService.getStorageUrl(VIDEO_STORAGE_ID);
-                setVideoUrl(url);
+                if (url) {
+                    setVideoUrl(url);
+                } else {
+                    setVideoUrl(`https://majestic-condor-361.convex.site/api/storage?storageId=${VIDEO_STORAGE_ID}`);
+                }
             } catch (e) {
                 console.error('Failed to fetch video URL:', e);
+                setVideoUrl(`https://majestic-condor-361.convex.site/api/storage?storageId=${VIDEO_STORAGE_ID}`);
             }
         };
         fetchVideoUrl();
