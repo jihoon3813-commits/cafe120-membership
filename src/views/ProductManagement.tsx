@@ -9,6 +9,7 @@ const ProductManagement: React.FC = () => {
     const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
     const [activeTab, setActiveTab] = useState<'products' | 'leads'>('products');
     const [uploading, setUploading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         loadData();
@@ -60,6 +61,12 @@ const ProductManagement: React.FC = () => {
         } catch (error) {
             console.error('Failed to load data:', error);
         }
+    };
+
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        await loadData();
+        setTimeout(() => setRefreshing(false), 500); // Subtle delay for better UX
     };
 
     const handleSaveProduct = async (e: React.FormEvent) => {
@@ -232,7 +239,26 @@ const ProductManagement: React.FC = () => {
                     </div>
                 </div>
             ) : (
-                <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+                <div className="space-y-6">
+                    <div className="flex justify-end">
+                        <button
+                            onClick={handleRefresh}
+                            disabled={refreshing}
+                            className={`flex items-center gap-2 px-6 py-3 bg-white border border-gray-100 rounded-2xl font-black text-sm transition shadow-sm hover:shadow-md active:scale-95 ${refreshing ? 'text-orange-500' : 'text-slate-600 hover:text-orange-500'}`}
+                        >
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            {refreshing ? '갱신 중...' : '신청 현황 새로고침'}
+                        </button>
+                    </div>
+                    <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-slate-50 border-b border-gray-100">
@@ -273,6 +299,7 @@ const ProductManagement: React.FC = () => {
                         </table>
                     </div>
                 </div>
+            </div>
             )}
 
             {/* Edit Modal */}
