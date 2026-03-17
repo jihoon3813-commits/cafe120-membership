@@ -180,6 +180,24 @@ export const dbService = {
             return [];
         }
     },
+    async updateLeadStatus(id: string, status: string): Promise<void> {
+        try {
+            // @ts-ignore
+            await getConvex().mutation(api.leads.updateStatus, { id, status });
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    },
+    async deleteLeads(ids: string[]): Promise<void> {
+        try {
+            // @ts-ignore
+            await getConvex().mutation(api.leads.remove, { ids });
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    },
 
     // AI History
     async saveHistory(userId: string, type: string, input: string, output: string) {

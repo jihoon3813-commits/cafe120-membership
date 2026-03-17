@@ -10,6 +10,9 @@ const ProductManagement: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'products' | 'leads'>('products');
     const [uploading, setUploading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+    const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
+
+    const STATUS_OPTIONS = ['대기중', '상담중', '부재', '거부', '계약진행', '계약취소', '계약완료'];
 
     useEffect(() => {
         loadData();
@@ -66,7 +69,49 @@ const ProductManagement: React.FC = () => {
     const handleRefresh = async () => {
         setRefreshing(true);
         await loadData();
+        setSelectedLeads([]);
         setTimeout(() => setRefreshing(false), 500); // Subtle delay for better UX
+    };
+
+    const handleUpdateLeadStatus = async (id: string, status: string) => {
+        try {
+            await dbService.updateLeadStatus(id, status);
+            setLeads(leads.map(l => l._id === id ? { ...l, status } : l));
+        } catch (error) {
+            console.error('Failed to update status:', error);
+            alert('상태 변경에 실패했습니다.');
+        }
+    };
+
+    const handleDeleteLeads = async () => {
+        if (selectedLeads.length === 0) return;
+        if (confirm(`${selectedLeads.length}명의 상담 신청 정보를 삭제하시겠습니까?`)) {
+            try {
+                await dbService.deleteLeads(selectedLeads);
+                setSelectedLeads([]);
+                loadData();
+            } catch (error) {
+                console.error('Failed to delete leads:', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            }
+        }
+    };
+
+    const toggleLeadSelection = (id: string) => {
+        if (selectedLeads.includes(id)) {
+            setSelectedLeads(selectedLeads.filter(i => i !== id));
+        } else {
+            setSelectedLeads([...selectedLeads, id]);
+        }
+    };
+
+    const toggleAllLeads = () => {
+        if (selectedLeads.length === leads.length) {
+            setSelectedLeads([]);
+        } else {
+            // @ts-ignore
+            setSelectedLeads(leads.map(l => l._id));
+        }
     };
 
     const handleSaveProduct = async (e: React.FormEvent) => {
@@ -240,7 +285,20 @@ const ProductManagement: React.FC = () => {
                 </div>
             ) : (
                 <div className="space-y-6">
-                    <div className="flex justify-end">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            {selectedLeads.length > 0 && (
+                                <button
+                                    onClick={handleDeleteLeads}
+                                    className="flex items-center gap-2 px-6 py-3 bg-red-50 text-red-600 rounded-2xl font-black text-sm transition shadow-sm hover:bg-red-100 active:scale-95"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    {selectedLeads.length}명 삭제
+                                </button>
+                            )}
+                        </div>
                         <button
                             onClick={handleRefresh}
                             disabled={refreshing}
@@ -263,11 +321,19 @@ const ProductManagement: React.FC = () => {
                         <table className="w-full text-left">
                             <thead className="bg-slate-50 border-b border-gray-100">
                                 <tr>
-                                    <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">날짜</th>
-                                    <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">신청 상품</th>
-                                    <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">신청자/업체명</th>
-                                    <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">연락처</th>
-                                    <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">상태</th>
+                                    <th className="px-6 py-5 text-center">
+                                        <input 
+                                            type="checkbox" 
+                                            className="w-4 h-4 accent-orange-500 rounded" 
+                                            onChange={toggleAllLeads}
+                                            checked={leads.length > 0 && selectedLeads.length === leads.length}
+                                        />
+                                    </th>
+                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">날짜</th>
+                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">신청 상품</th>
+                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">신청자/업체명</th>
+                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">연락처</th>
+                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-wider">상태 설정</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-50">
@@ -277,20 +343,47 @@ const ProductManagement: React.FC = () => {
                                     </tr>
                                 ) : (
                                     leads.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((lead) => (
-                                        <tr key={lead._id} className="hover:bg-slate-50 transition-colors">
-                                            <td className="px-8 py-5 text-sm font-medium text-slate-500">{new Date(lead.createdAt).toLocaleDateString()}</td>
-                                            <td className="px-8 py-5">
-                                                <span className="px-3 py-1 bg-orange-50 text-orange-600 text-xs font-black rounded-lg">{lead.productName}</span>
+                                        // @ts-ignore
+                                        <tr key={lead._id} className={`hover:bg-slate-50 transition-colors ${selectedLeads.includes(lead._id) ? 'bg-orange-50/30' : ''}`}>
+                                            <td className="px-6 py-5 text-center">
+                                                <input 
+                                                    type="checkbox" 
+                                                    className="w-4 h-4 accent-orange-500 rounded" 
+                                                    // @ts-ignore
+                                                    checked={selectedLeads.includes(lead._id)}
+                                                    // @ts-ignore
+                                                    onChange={() => toggleLeadSelection(lead._id)}
+                                                />
                                             </td>
-                                            <td className="px-8 py-5">
-                                                <p className="font-bold text-slate-900">{lead.name}</p>
-                                                <p className="text-xs text-slate-400">{lead.businessName || '-'}</p>
+                                            <td className="px-6 py-5 text-sm font-medium text-slate-500 whitespace-nowrap">{new Date(lead.createdAt).toLocaleDateString()}</td>
+                                            <td className="px-6 py-5">
+                                                <span className="px-3 py-1 bg-orange-50 text-orange-600 text-[10px] font-black rounded-lg whitespace-nowrap">{lead.productName}</span>
                                             </td>
-                                            <td className="px-8 py-5 text-sm font-medium text-slate-600">{lead.phone}</td>
-                                            <td className="px-8 py-5">
-                                                <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tight ${lead.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
-                                                    {lead.status === 'completed' ? '상담 완료' : '대기중'}
-                                                </span>
+                                            <td className="px-6 py-5">
+                                                <p className="font-bold text-slate-900 text-sm">{lead.name}</p>
+                                                <p className="text-[11px] text-slate-400 truncate max-w-[120px]">{lead.businessName || '-'}</p>
+                                            </td>
+                                            <td className="px-6 py-5 text-sm font-medium text-slate-600 whitespace-nowrap">{lead.phone}</td>
+                                            <td className="px-6 py-5">
+                                                <select 
+                                                    // @ts-ignore
+                                                    value={STATUS_OPTIONS.includes(lead.status) ? lead.status : (lead.status === 'pending' ? '대기중' : (lead.status === 'completed' ? '계약완료' : '대기중'))}
+                                                    // @ts-ignore
+                                                    onChange={(e) => handleUpdateLeadStatus(lead._id, e.target.value)}
+                                                    className={`px-3 py-1.5 rounded-xl text-xs font-black outline-none border-none cursor-pointer transition-all shadow-sm
+                                                        ${lead.status === '계약완료' || lead.status === 'completed' ? 'bg-green-100 text-green-700 hover:bg-green-200' : 
+                                                          lead.status === '계약취소' || lead.status === '거부' ? 'bg-red-100 text-red-700 hover:bg-red-200' :
+                                                          lead.status === '대기중' || lead.status === 'pending' ? 'bg-orange-100 text-orange-700 hover:bg-orange-200' :
+                                                          'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}
+                                                >
+                                                    {STATUS_OPTIONS.map(opt => (
+                                                        <option key={opt} value={opt}>{opt}</option>
+                                                    ))}
+                                                    {/* Fallback for old statuses */}
+                                                    {!STATUS_OPTIONS.includes(lead.status) && (
+                                                        <option value={lead.status}>{lead.status === 'pending' ? '대기중' : (lead.status === 'completed' ? '계약완료' : lead.status)}</option>
+                                                    )}
+                                                </select>
                                             </td>
                                         </tr>
                                     ))

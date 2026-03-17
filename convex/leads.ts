@@ -40,6 +40,27 @@ export const list = query({
     },
 });
 
+export const updateStatus = mutation({
+    args: {
+        id: v.id("leads"),
+        status: v.string(),
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.patch(args.id, { status: args.status });
+    },
+});
+
+export const remove = mutation({
+    args: {
+        ids: v.array(v.id("leads")),
+    },
+    handler: async (ctx, args) => {
+        for (const id of args.ids) {
+            await ctx.db.delete(id);
+        }
+    },
+});
+
 export const notifyDiscord = action({
     args: {
         productId: v.string(),

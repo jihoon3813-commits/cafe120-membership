@@ -55,7 +55,7 @@ export interface Lead {
     email?: string;
     businessName?: string;
     message?: string;
-    status: 'pending' | 'completed';
+    status: string;
     createdAt: string;
 }
 
