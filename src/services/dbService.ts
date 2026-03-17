@@ -165,13 +165,6 @@ export const dbService = {
         try {
             // @ts-ignore
             await getConvex().mutation(api.leads.submit, lead);
-            // Discord Notification
-            try {
-                // @ts-ignore
-                await getConvex().action(api.leads.notifyDiscord, lead);
-            } catch (notifyError) {
-                console.error('Discord notification failed:', notifyError);
-            }
         } catch (e) {
             console.error(e);
             throw e;

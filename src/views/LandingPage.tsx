@@ -77,6 +77,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
                 productId: product.id,
                 productName: product.name
             });
+
+            // Trigger Google Ads conversion
+            // @ts-ignore
+            if (typeof window.gtag === 'function') {
+                // @ts-ignore
+                window.gtag('event', 'ads_conversion_PAGE_VIEW_1', {
+                    'event_callback': () => console.log('Google Ads conversion logged'),
+                    'event_timeout': 2000
+                });
+            }
+
             setFormSubmitted(true);
             // Scroll to form success message
             const consultSection = document.getElementById('consult');

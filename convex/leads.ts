@@ -19,6 +19,16 @@ export const submit = mutation({
             status: "pending",
             createdAt: new Date().toISOString(),
         });
+
+        // Trigger Discord notification as a background action
+        await ctx.scheduler.runAfter(0, api.leads.notifyDiscord, {
+            productId: args.productId,
+            productName: args.productName,
+            name: args.name,
+            phone: args.phone,
+            businessName: args.businessName,
+            message: args.message,
+        });
     },
 });
 
