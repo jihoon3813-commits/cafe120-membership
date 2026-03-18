@@ -82,7 +82,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
             // @ts-ignore
             if (typeof window.gtag === 'function') {
                 // @ts-ignore
-                window.gtag('event', 'ads_conversion_PAGE_VIEW_1', {
+                window.gtag('event', 'conversion', {
+                    'send_to': 'AW-17813552218/4FFtCI-9i4ocENr4lK5C',
                     'event_callback': () => console.log('Google Ads conversion logged'),
                     'event_timeout': 2000
                 });
