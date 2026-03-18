@@ -79,14 +79,29 @@ const LandingPage: React.FC<LandingPageProps> = ({ productId, onBack }) => {
             });
 
             // Trigger Google Ads conversion
-            // @ts-ignore
-            if (typeof window.gtag === 'function') {
+            try {
                 // @ts-ignore
-                window.gtag('event', 'conversion', {
-                    'send_to': 'AW-17813552218/4FFtCI-9i4ocENr4lK5C',
-                    'event_callback': () => console.log('Google Ads conversion logged'),
-                    'event_timeout': 2000
-                });
+                const gtagFunc = window.gtag || (window as any).gtag || (typeof gtag !== 'undefined' ? gtag : null);
+                if (typeof gtagFunc === 'function') {
+                    gtagFunc('event', 'conversion', {
+                        'send_to': 'AW-17813552218/4FFtCI-9i4ocENr4lK5C',
+                        'event_callback': () => console.log('Google Ads conversion logged successfully'),
+                        'event_timeout': 2000
+                    });
+                } else {
+                    console.warn('Google Ads gtag function not found, pushing to dataLayer directly');
+                    // @ts-ignore
+                    window.dataLayer = window.dataLayer || [];
+                    // @ts-ignore
+                    window.dataLayer.push({
+                        'event': 'conversion',
+                        'send_to': 'AW-17813552218/4FFtCI-9i4ocENr4lK5C',
+                        'event_callback': () => console.log('Google Ads conversion pushed to dataLayer'),
+                        'event_timeout': 2000
+                    });
+                }
+            } catch (gtagError) {
+                console.error('Error triggering Google Ads conversion:', gtagError);
             }
 
             setFormSubmitted(true);
